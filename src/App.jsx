@@ -1,5 +1,6 @@
 import React from "react";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import Home from "./pages/Home";
 
 const theme = createTheme({
   palette: {
@@ -19,9 +20,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div>
-        <h1>Bem-vindo à Aplicação de Música</h1>
-      </div>
+      <Home />
     </ThemeProvider>
   );
 };
