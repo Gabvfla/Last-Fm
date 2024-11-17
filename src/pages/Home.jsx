@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextField, Typography, Box, Card, CardContent } from "@mui/material";
+import { Button, TextField, Typography, Box, Card, CardContent, CardMedia } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -63,6 +63,16 @@ const Home = () => {
           <Typography variant="h5">Resultados:</Typography>
           {result.map((artist) => (
             <Card key={artist.mbid || artist.name} sx={{ maxWidth: 345, margin: "20px auto" }}>
+              <CardMedia
+                component="img"
+                alt={artist.name}
+                height="140"
+                image={
+                  artist.image && artist.image.length > 2 && artist.image[2]["#text"]
+                    ? artist.image[2]["#text"]
+                    : "https://via.placeholder.com/140"
+                }
+              />
               <CardContent>
                 <Typography variant="h6">{artist.name}</Typography>
                 <Link to={`/artist/${artist.name}`}>
