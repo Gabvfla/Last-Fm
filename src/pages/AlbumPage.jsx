@@ -1,94 +1,63 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom"; 
-import { Box, Typography, Card, CardContent, CardMedia, Grid, IconButton } from "@mui/material";
-import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Box, Typography, Card, CardContent, CardMedia, Button } from "@mui/material";
 
 const AlbumPage = () => {
-  const { id } = useParams();
-  const [albumDetails, setAlbumDetails] = useState(null);
+  const { albumId } = useParams();
+  const [album, setAlbum] = useState(null);
+  const [songs, setSongs] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchAlbumDetails = async () => {
+    const fetchAlbumData = async () => {
       try {
         const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
-        const url = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${API_KEY}&mbid=${id}&format=json`;
+        const url = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&mbid=${albumId}&api_key=${API_KEY}&format=json`;
 
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error("Erro ao buscar os dados do álbum.");
+          throw new Error("Erro ao buscar dados do álbum.");
         }
+
         const data = await response.json();
-        setAlbumDetails(data.album);
+        setAlbum(data.album);
+        setSongs(data.album.tracks.track);
       } catch (err) {
         setError("Não foi possível carregar os dados do álbum.");
       }
     };
 
-    fetchAlbumDetails();
-  }, [id]);
-
-  if (error) {
-    return <Typography>{error}</Typography>;
-  }
-
-  if (!albumDetails) {
-    return <Typography>Carregando...</Typography>;
-  }
+    fetchAlbumData();
+  }, [albumId]);
 
   return (
     <Box sx={{ textAlign: "center", mt: 5 }}>
-      <Typography variant="h4" gutterBottom>
-        {albumDetails.name} - {albumDetails.artist}
-      </Typography>
-      <Card sx={{ maxWidth: 500, margin: "0 auto" }}>
-        <CardMedia
-          component="img"
-          alt={albumDetails.name}
-          height="300"
-          image={albumDetails.image[2]["#text"]}
-        />
-        <CardContent>
-          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-            Ano de Lançamento: {albumDetails.year}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Gênero: {albumDetails.tags?.tag?.[0]?.name || "Desconhecido"}
-          </Typography>
-        </CardContent>
-      </Card>
+      {error && <Typography color="error">{error}</Typography>}
 
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h5" gutterBottom>
-          Músicas:
-        </Typography>
-        {albumDetails.tracks.track.length > 0 ? (
-          <Grid container spacing={4} justifyContent="center">
-            {albumDetails.tracks.track.map((track) => (
-              <Grid item xs={12} sm={6} md={4} key={track.url}>
-                <Card sx={{ maxWidth: 345, boxShadow: 3, borderRadius: 2 }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                      {track.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Duração: {track.duration}s
-                    </Typography>
-                    <IconButton
-                      color="primary"
-                      onClick={() => window.open(track.url, "_blank")}
-                    >
-                      <PlayCircleOutlineIcon /> Ouvir
-                    </IconButton>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Typography>Nenhuma música encontrada.</Typography>
-        )}
-      </Box>
+      {album && (
+        <Box>
+          <Typography variant="h4">{album.name}</Typography>
+          <Typography variant="h6">Artista: {album.artist}</Typography>
+          <Typography variant="body1">Ano: {album.year}</Typography>
+
+          <Card sx={{ maxWidth: 345, margin: "20px auto" }}>
+            <CardMedia
+              component="img"
+              alt={album.name}
+              height="200"
+              image={album.image[2]["#text"]}
+            />
+            <CardContent>
+              <Typography variant="h6">Faixas:</Typography>
+              {songs.map((song) => (
+                <Typography key={song.url} variant="body2">
+                  {song.name}
+                </Typography>
+              ))}
+            </CardContent>
+          </Card>
+        </Box>
+      )}
     </Box>
   );
 };

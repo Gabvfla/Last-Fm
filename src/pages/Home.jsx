@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Button, TextField, Typography, Box, Card, CardContent, CardMedia, Grid } from "@mui/material";
-import { useNavigate } from "react-router-dom"; 
+import { Button, TextField, Typography, Box, Card, CardContent, CardMedia } from "@mui/material";
+import { Link } from "react-router-dom"; 
 
 const Home = () => {
-  const [album, setAlbum] = useState(""); 
-  const [result, setResult] = useState(null); 
+  const [album, setAlbum] = useState("");
+  const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); 
 
   const handleSearch = async () => {
     if (!album.trim()) {
@@ -14,11 +13,9 @@ const Home = () => {
       return;
     }
 
-    setResult(null);
-
     try {
-      setError(null); 
-      const API_KEY = import.meta.env.VITE_LASTFM_API_KEY; 
+      setError(null);
+      const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
       const url = `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${encodeURIComponent(
         album
       )}&api_key=${API_KEY}&format=json`;
@@ -30,19 +27,15 @@ const Home = () => {
       }
 
       const data = await response.json();
-      setResult(data.results.albummatches.album.slice(0, 5)); 
+      setResult(data.results.albummatches.album.slice(0, 5));
     } catch (err) {
       setError("Não foi possível buscar os dados. Tente novamente mais tarde.");
     }
   };
 
-  const handleAlbumClick = (id) => {
-    navigate(`/album/${id}`); 
-  };
-
   return (
     <Box sx={{ textAlign: "center", mt: 5 }}>
-      <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
+      <Typography variant="h4" gutterBottom>
         Buscar Álbuns no Last.fm
       </Typography>
 
@@ -53,33 +46,48 @@ const Home = () => {
         onChange={(e) => setAlbum(e.target.value)}
         error={!!error}
         helperText={error || ""}
-        sx={{ mb: 2, width: { xs: "90%", sm: "300px" } }} 
+        sx={{ mb: 2, width: "300px" }}
       />
-      <Button variant="contained" onClick={handleSearch}>Buscar</Button>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSearch}
+        sx={{ display: "block", margin: "0 auto" }}
+      >
+        Buscar
+      </Button>
 
       {result && (
-        <Grid container spacing={4} justifyContent="center" sx={{ mt: 5 }}>
-          {result.map((album) => (
-            <Grid item xs={12} sm={6} md={4} key={album.mbid}>
-              <Card sx={{ maxWidth: 345, boxShadow: 3, borderRadius: 2 }} onClick={() => handleAlbumClick(album.mbid)}>
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h5">Resultados:</Typography>
+          {result.length > 0 ? (
+            result.map((album) => (
+              <Card key={album.mbid} sx={{ maxWidth: 345, margin: "20px auto" }}>
                 <CardMedia
                   component="img"
                   alt={album.name}
-                  height="300"
-                  image={album.image[2]["#text"]}
+                  height="140"
+                  image={album.image[2]["#text"]} 
                 />
                 <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                    {album.name}
+                  <Typography variant="h6">{album.name}</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Artista: {album.artist}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
-                    {album.artist}
+                    Ano de Lançamento: {album.year}
                   </Typography>
+                  <Link to={`/album/${album.mbid}`}>
+                    <Button variant="contained" color="secondary">Ver Álbum</Button>
+                  </Link>
                 </CardContent>
               </Card>
-            </Grid>
-          ))}
-        </Grid>
+            ))
+          ) : (
+            <Typography>Nenhum álbum encontrado.</Typography>
+          )}
+        </Box>
       )}
     </Box>
   );
