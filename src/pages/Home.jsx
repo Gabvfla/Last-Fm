@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Button, TextField, Typography, Box, Card, CardContent, CardMedia } from "@mui/material";
-import { Link } from "react-router-dom"; 
+import { Button, TextField, Typography, Box, Card, CardContent } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [artist, setArtist] = useState("");
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState([]);
   const [error, setError] = useState(null);
 
   const handleSearch = async () => {
@@ -63,22 +63,10 @@ const Home = () => {
           <Typography variant="h5">Resultados:</Typography>
           {result.map((artist) => (
             <Card key={artist.mbid || artist.name} sx={{ maxWidth: 345, margin: "20px auto" }}>
-              <CardMedia
-                component="img"
-                alt={artist.name}
-                height="140"
-                image={
-                  artist.image && artist.image.length > 2
-                    ? artist.image[2]["#text"] 
-                    : "https://via.placeholder.com/140"
-                }
-              />
-                <CardContent>
+              <CardContent>
                 <Typography variant="h6">{artist.name}</Typography>
-                <Link to={`/artist/${artist.name}`} style={{ textDecoration: "none" }}>
-                  <Button variant="contained" color="secondary" sx={{ mt: 1 }}>
-                    Ver Artista
-                  </Button>
+                <Link to={`/artist/${artist.name}`}>
+                  <Button variant="contained" color="secondary">Ver Artista</Button>
                 </Link>
               </CardContent>
             </Card>
