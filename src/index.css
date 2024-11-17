@@ -3,11 +3,11 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh; /* Certifica-se de que o corpo ocupa toda a altura da tela */
+  min-height: 100vh; 
   background-color: #f4f4f4;
   font-family: 'Roboto', sans-serif;
-  flex-direction: column; /* Garante que os itens sejam empilhados verticalmente */
-  justify-content: center; /* Centraliza verticalmente */
+  flex-direction: column; 
+  justify-content: center; 
 }
 
 h1 {

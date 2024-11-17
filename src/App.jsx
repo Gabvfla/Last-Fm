@@ -1,6 +1,8 @@
 import React from "react";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; 
 import Home from "./pages/Home";
+import AlbumPage from "./pages/AlbumPage"; 
 
 const theme = createTheme({
   palette: {
@@ -20,7 +22,12 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Home />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/album/:id" element={<AlbumPage />} /> 
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
 };
