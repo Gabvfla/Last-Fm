@@ -1,8 +1,13 @@
 #root {
   max-width: 1280px;
-  margin: 0 auto;
+  margin: 0 auto; /* Certifica-se de que o conteúdo está centralizado horizontalmente */
   padding: 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Centraliza verticalmente */
+  min-height: 100vh; /* Garante que o conteúdo ocupe toda a altura da tela */
 }
 
 .logo {
@@ -35,6 +40,8 @@
 
 .card {
   padding: 2em;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 }
 
 .read-the-docs {

@@ -12,6 +12,7 @@ const Home = () => {
       return;
     }
 
+    // Limpar os resultados anteriores
     setResult(null);
 
     try {
@@ -28,15 +29,15 @@ const Home = () => {
       }
 
       const data = await response.json();
-      setResult(data.results.albummatches.album.slice(0, 5)); 
+      setResult(data.results.albummatches.album.slice(0, 5)); // Pega apenas os 5 primeiros resultados
     } catch (err) {
       setError("Não foi possível buscar os dados. Tente novamente mais tarde.");
     }
   };
 
   return (
-    <Box sx={{ textAlign: "center", mt: 5 }}>
-      <Typography variant="h4" gutterBottom>
+    <Box sx={{ textAlign: "center", mt: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
         Buscar Álbuns no Last.fm
       </Typography>
 
@@ -47,7 +48,7 @@ const Home = () => {
         onChange={(e) => setAlbum(e.target.value)}
         error={!!error}
         helperText={error || ""}
-        sx={{ mb: 2, width: { xs: "90%", sm: "300px" } }} 
+        sx={{ mb: 2, width: { xs: "90%", sm: "300px" } }} // Responsivo
       />
 
       <Button
@@ -73,7 +74,7 @@ const Home = () => {
                       component="img"
                       alt={album.name}
                       height="200"
-                      image={album.image[2]["#text"]} 
+                      image={album.image[2]["#text"]} // imagem maior
                       sx={{ objectFit: "cover", borderRadius: 2 }}
                     />
                     <CardContent>
