@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Box, Typography, Card, CardContent, CardMedia } from "@mui/material";
+import { useParams, useNavigate } from "react-router-dom";
+import { Box, Typography, Card, CardContent, CardMedia, Button } from "@mui/material";
 
 const ArtistPage = () => {
   const { artistName } = useParams();
   const [artist, setArtist] = useState(null);
   const [tracks, setTracks] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchArtistData = async () => {
@@ -35,14 +36,14 @@ const ArtistPage = () => {
   return (
     <Box sx={{ textAlign: "center", mt: 5 }}>
       {error && <Typography color="error">{error}</Typography>}
-
+  
       {artist && (
         <Box>
           <Typography variant="h4">Artista: {artist}</Typography>
           <Typography variant="h6" sx={{ mb: 4 }}>
             Principais Músicas
           </Typography>
-
+  
           {tracks.map((track) => (
             <Card key={track.mbid || track.name} sx={{ maxWidth: 345, margin: "20px auto" }}>
               <CardMedia
@@ -58,11 +59,21 @@ const ArtistPage = () => {
               <CardContent>
                 <Typography variant="h6">{track.name}</Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Listeners: {track.listeners}
+                  Ouvintes: {track.listeners}
                 </Typography>
               </CardContent>
             </Card>
           ))}
+
+          {/*botão para voltar*/}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 4 }}
+            onClick={() => navigate(-1)}
+          >
+            Voltar
+          </Button>
         </Box>
       )}
     </Box>
