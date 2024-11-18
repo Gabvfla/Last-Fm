@@ -24,7 +24,39 @@ const ArtistPage = () => {
 
         const data = await response.json();
         setArtist(data.toptracks["@attr"].artist);
-        setTracks(data.toptracks.track.slice(0, 5));
+
+        const tracksWithAlbumInfo = await Promise.all(
+          data.toptracks.track.slice(0, 5).map(async (track) => {
+            try {
+              const trackInfoUrl = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&artist=${encodeURIComponent(
+                artistName
+              )}&track=${encodeURIComponent(track.name)}&api_key=${API_KEY}&format=json`;
+
+              const trackInfoResponse = await fetch(trackInfoUrl);
+              const trackInfoData = await trackInfoResponse.json();
+
+              return {
+                name: track.name,
+                artist: track.artist.name,
+                albumImage:
+                  trackInfoData.track &&
+                  trackInfoData.track.album &&
+                  trackInfoData.track.album.image &&
+                  trackInfoData.track.album.image.length > 3
+                    ? trackInfoData.track.album.image[3]["#text"] 
+                    : "https://via.placeholder.com/140", 
+              };
+            } catch {
+              return {
+                name: track.name,
+                artist: track.artist.name,
+                albumImage: "https://via.placeholder.com/140",
+              };
+            }
+          })
+        );
+
+        setTracks(tracksWithAlbumInfo);
       } catch (err) {
         setError("Não foi possível carregar os dados do artista.");
       }
@@ -36,36 +68,31 @@ const ArtistPage = () => {
   return (
     <Box sx={{ textAlign: "center", mt: 5 }}>
       {error && <Typography color="error">{error}</Typography>}
-  
+
       {artist && (
         <Box>
           <Typography variant="h4">Artista: {artist}</Typography>
           <Typography variant="h6" sx={{ mb: 4 }}>
             Principais Músicas
           </Typography>
-  
+
           {tracks.map((track) => (
-            <Card key={track.mbid || track.name} sx={{ maxWidth: 345, margin: "20px auto" }}>
+            <Card key={track.name} sx={{ maxWidth: 345, margin: "20px auto" }}>
               <CardMedia
                 component="img"
                 alt={track.name}
                 height="140"
-                image={
-                  track.image && track.image.length > 2
-                    ? track.image[2]["#text"]
-                    : "https://via.placeholder.com/140"
-                }
+                image={track.albumImage}
               />
               <CardContent>
                 <Typography variant="h6">{track.name}</Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Ouvintes: {track.listeners}
+                  Artista: {track.artist}
                 </Typography>
               </CardContent>
             </Card>
           ))}
 
-          {/*botão para voltar*/}
           <Button
             variant="contained"
             color="primary"
