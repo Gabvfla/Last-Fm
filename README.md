@@ -42,7 +42,7 @@ Para iniciar o servidor de desenvolvimento, execute o comando:
 npm run dev
 ```
 
-Agora, acesse [http://localhost:3000](http://localhost:3000) no seu navegador para ver o projeto em funcionamento!
+Agora, acesse [http://localhost:3000](http://localhost:5173) no seu navegador para ver o projeto em funcionamento!
 
 ## 🏗️ Build e Deploy
 
@@ -80,10 +80,5 @@ Se você tiver sugestões ou melhorias para o projeto, sinta-se à vontade para 
 2. Crie uma branch para suas modificações.
 3. Envie um pull request.
 
-## 📄 Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
-
----
-
-🔧 **Feito com ❤️ por gabvfla**  
+🔧 **Feito com ❤️ por gabvfla e leilaminello**  
