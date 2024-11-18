@@ -2,8 +2,7 @@ import React from "react";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import ArtistPage from "./pages/ArtistPage";
-import TopArtistsPage from "./pages/TopArtistsPage"; // Adicionei o import da nova página
+import ArtistPage from "./pages/ArtistPage"; 
 
 const theme = createTheme({
   palette: {
@@ -22,16 +21,15 @@ const theme = createTheme({
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/artist/:artistName" element={<ArtistPage />} />
-          <Route path="/top-artists/:country" element={<TopArtistsPage />} /> 
-        </Routes>
-      </Router>
-    </ThemeProvider>
-  );
+    <CssBaseline />
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/artist/:artistName" element={<ArtistPage />} />
+      </Routes>
+    </Router>
+  </ThemeProvider>
+);
 };
 
 export default App;
