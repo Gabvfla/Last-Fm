@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, Typography, Card, CardContent, CardMedia, Button } from "@mui/material";
+import { Box, Typography, Card, CardContent, CardMedia, Button, Grid } from "@mui/material";
 
 const ArtistPage = () => {
   const { artistName } = useParams();
@@ -43,8 +43,8 @@ const ArtistPage = () => {
                   trackInfoData.track.album &&
                   trackInfoData.track.album.image &&
                   trackInfoData.track.album.image.length > 3
-                    ? trackInfoData.track.album.image[3]["#text"] 
-                    : "https://via.placeholder.com/140", 
+                    ? trackInfoData.track.album.image[3]["#text"]
+                    : "https://via.placeholder.com/140",
               };
             } catch {
               return {
@@ -65,38 +65,58 @@ const ArtistPage = () => {
     fetchArtistData();
   }, [artistName]);
 
+  const memoizedTracks = useMemo(() => tracks, [tracks]);
+
   return (
     <Box sx={{ textAlign: "center", mt: 5 }}>
       {error && <Typography color="error">{error}</Typography>}
 
       {artist && (
         <Box>
-          <Typography variant="h4">Artista: {artist}</Typography>
+          <Typography variant="h4" sx={{ mb: 2 }}>
+            Artista: {artist}
+          </Typography>
           <Typography variant="h6" sx={{ mb: 4 }}>
             Principais Músicas
           </Typography>
 
-          {tracks.map((track) => (
-            <Card key={track.name} sx={{ maxWidth: 345, margin: "20px auto" }}>
-              <CardMedia
-                component="img"
-                alt={track.name}
-                height="140"
-                image={track.albumImage}
-              />
-              <CardContent>
-                <Typography variant="h6">{track.name}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Artista: {track.artist}
-                </Typography>
-              </CardContent>
-            </Card>
-          ))}
+          <Grid container spacing={4} justifyContent="center">
+            {memoizedTracks.map((track) => (
+              <Grid item xs={12} sm={6} md={4} key={track.name}>
+                <Card sx={{ maxWidth: 345, boxShadow: 3, borderRadius: 2 }}>
+                  <CardMedia
+                    component="img"
+                    alt={track.name}
+                    height="180"
+                    image={track.albumImage}
+                    sx={{ objectFit: "cover" }}
+                  />
+                  <CardContent sx={{ backgroundColor: "#fafafa", padding: "1.5rem" }}>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                      {track.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      Artista: {track.artist}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
 
           <Button
             variant="contained"
             color="primary"
-            sx={{ mt: 4 }}
+            sx={{
+              mt: 4,
+              padding: "0.8rem 2rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              transition: "background-color 0.3s",
+              "&:hover": {
+                backgroundColor: "#1565c0",
+              },
+            }}
             onClick={() => navigate(-1)}
           >
             Voltar

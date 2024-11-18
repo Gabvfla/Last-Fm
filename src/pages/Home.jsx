@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, TextField, Typography, Box, Card, CardContent, CardMedia } from "@mui/material";
+import React, { useState, useMemo } from "react";
+import { Button, TextField, Typography, Box, Card, CardContent, CardMedia, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -33,6 +33,8 @@ const Home = () => {
     }
   };
 
+  const memoizedResult = useMemo(() => result, [result]);
+
   return (
     <Box sx={{ textAlign: "center", mt: 5 }}>
       <Typography variant="h4" gutterBottom>
@@ -46,41 +48,64 @@ const Home = () => {
         onChange={(e) => setArtist(e.target.value)}
         error={!!error}
         helperText={error || ""}
-        sx={{ mb: 2, width: "300px" }}
+        sx={{
+          mb: 2,
+          width: { xs: "100%", sm: "300px" },
+          "& .MuiInputLabel-root": { fontSize: "1.2rem" },
+        }}
       />
 
       <Button
         variant="contained"
         color="primary"
         onClick={handleSearch}
-        sx={{ display: "block", margin: "0 auto" }}
+        sx={{
+          display: "block",
+          margin: "0 auto",
+          padding: "0.8rem 2rem",
+          fontWeight: "bold",
+          borderRadius: "8px",
+          transition: "background-color 0.3s",
+          "&:hover": {
+            backgroundColor: "#1565c0",
+          },
+        }}
       >
         Buscar
       </Button>
 
-      {result.length > 0 && (
+      {memoizedResult.length > 0 && (
         <Box sx={{ mt: 4 }}>
           <Typography variant="h5">Resultados:</Typography>
-          {result.map((artist) => (
-            <Card key={artist.mbid || artist.name} sx={{ maxWidth: 345, margin: "20px auto" }}>
-              <CardMedia
-                component="img"
-                alt={artist.name}
-                height="140"
-                image={
-                  artist.image && artist.image.length > 2 && artist.image[2]["#text"]
-                    ? artist.image[2]["#text"]
-                    : "https://via.placeholder.com/140"
-                }
-              />
-              <CardContent>
-                <Typography variant="h6">{artist.name}</Typography>
-                <Link to={`/artist/${artist.name}`}>
-                  <Button variant="contained" color="secondary">Ver Artista</Button>
-                </Link>
-              </CardContent>
-            </Card>
-          ))}
+          <Grid container spacing={4} justifyContent="center">
+            {memoizedResult.map((artist) => (
+              <Grid item xs={12} sm={6} md={4} key={artist.mbid || artist.name}>
+                <Card sx={{ maxWidth: 345, boxShadow: 3, borderRadius: 2 }}>
+                  <CardMedia
+                    component="img"
+                    alt={artist.name}
+                    height="140"
+                    image={
+                      artist.image && artist.image.length > 2 && artist.image[2]["#text"]
+                        ? artist.image[2]["#text"]
+                        : "https://via.placeholder.com/140"
+                    }
+                    sx={{ objectFit: "cover" }}
+                  />
+                  <CardContent sx={{ backgroundColor: "#fafafa", padding: "1.5rem" }}>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                      {artist.name}
+                    </Typography>
+                    <Link to={`/artist/${artist.name}`}>
+                      <Button variant="contained" color="secondary" sx={{ mt: 2 }}>
+                        Ver Artista
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       )}
     </Box>
