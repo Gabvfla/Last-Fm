@@ -68,7 +68,14 @@ const ArtistPage = () => {
   const memoizedTracks = useMemo(() => tracks, [tracks]);
 
   return (
-    <Box sx={{ textAlign: "center", mt: 5 }}>
+    <Box sx={{ 
+      fontFamily: "National",
+      textAlign: "center", 
+      mt: 5,
+      color: "white",
+      backgroundColor: "#d92323",
+      padding: "120px",
+      borderRadius: "10px" }}>
       {error && <Typography color="error">{error}</Typography>}
 
       {artist && (
@@ -108,14 +115,17 @@ const ArtistPage = () => {
             variant="contained"
             color="primary"
             sx={{
-              mt: 4,
+              display: "block",
+              margin: "50px auto",
               padding: "0.8rem 2rem",
               fontWeight: "bold",
               borderRadius: "8px",
+              backgroundColor: "black",
               transition: "background-color 0.3s",
               "&:hover": {
-                backgroundColor: "#1565c0",
-              },
+                backgroundColor: "white",
+                color: "black"
+          },
             }}
             onClick={() => navigate(-1)}
           >
